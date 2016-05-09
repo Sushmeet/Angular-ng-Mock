@@ -36,7 +36,8 @@ describe('Omdb service', function () {
     });
 
     it('should use the Module Function and return the movieData', function () {
-        var service = {};
+
+        var omdbApi = {};
 
         angular.mock.module({
             'omdbApi': {
@@ -46,6 +47,31 @@ describe('Omdb service', function () {
             }
         });
 
-        expect(service.search('Terminator 2: Judgment Day')).toEqual(movieData.Title);
+        angular.mock.inject(function (_omdbApi_) {
+            omdbApi = _omdbApi_;
+        });
+
+        expect(omdbApi.search('Terminator 2: Judgment Day')).toEqual(movieData.Title);
+    });
+
+    it('should use the module function and a second technique', function () {
+
+        var omdbApi = {};
+
+        angular.mock.module(function ($provide) {
+            $provide.factory('omdbApi', function () {
+                return {
+                    search: function (query) {
+                        return movieData.Title;
+                    }
+                }
+            });
+        });
+
+        angular.mock.inject(function(_omdbApi_) {
+            omdbApi = _omdbApi_;
+        });
+
+        expect(omdbApi.search('Terminator 2: Judgment Day')).toEqual(movieData.Title);
     });
 });
