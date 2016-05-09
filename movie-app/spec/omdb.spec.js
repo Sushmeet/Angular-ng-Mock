@@ -2,7 +2,7 @@
  * Created by sushi on 07/05/16.
  */
 
-describe('omdb service', function () {
+describe('Omdb service', function () {
     var movieData = {
         Title: "Terminator 2: Judgment Day",
         Year: "1991",
@@ -26,12 +26,26 @@ describe('omdb service', function () {
         Response: "True"
     };
 
-    it('should return search movie data', function () {
+    it('should return search movie data with service object defined locally', function () {
         var service = {
             search: function (query) {
-                return movieData;
+                return movieData.Title;
             }
         };
-        expect(service.search('Terminator 2: Judgment Day')).toEqual(movieData);
+        expect(service.search('Terminator 2: Judgment Day')).toEqual(movieData.Title);
+    });
+
+    it('should use the Module Function and return the movieData', function () {
+        var service = {};
+
+        angular.mock.module({
+            'omdbApi': {
+                search: function (query) {
+                    return movieData.Title;
+                }
+            }
+        });
+
+        expect(service.search('Terminator 2: Judgment Day')).toEqual(movieData.Title);
     });
 });
